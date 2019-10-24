@@ -2,11 +2,12 @@
 var auth = auth || {};
 auth = (()=>{
 	const WHEN_ERR = '호출하는 JS파일을 찾지 못했습니다.'
-	let _, js, auth_vue_js;
+	let _, js, auth_vue_js, brd_vue_js;
 	let init =()=> {
 		_=$.ctx();
 		js=$.js();
-		auth_vue_js=js+'/vue/auth_vue.js'
+		auth_vue_js=js+'/vue/auth_vue.js';
+		brd_vue_js=js+'/vue/brd_vue.js'
 	}
 	
 	let onCreate =()=>{
@@ -15,49 +16,53 @@ auth = (()=>{
 			setContentView()
 			$('#a_go_join').click(e=>{
 				e.preventDefault()
-				join()
+				$('head').html(auth_vue.join_head())
+				$('body').html(auth_vue.join_body())
+				$('<button>',{
+						text : '회원가입',
+						href : '#',
+						click : e=>{
+								e.preventDefault();
+								let data = {
+				            			mid : $('#customerid').val(), 
+				            			mpw : $('#password').val(),
+				            			mname : $('#username').val()
+				            			}
+								existId(data)
+						}
+				})
+				.addClass('btn btn-primary btn-lg btn-block')
+				.appendTo('#b_join_success')
 			})
-		}).fail(()=>{alert(WHEN_ERR)})
+		})
 	}
-	
+		
 	let setContentView =()=>{
 		login()
 	}
 	
-    let join =()=>{
-    	$('head').html(auth_vue.join_head())
-        $('body').html(auth_vue.join_body())
-        $('<button>',{
-            text : 'Continue to checkout',
-            href : '#',
-            click : e=>{
-            	e.preventDefault();
-            	let data = {
-            			mid : $('#customerid').val(), 
-            			mpw : $('#password').val(),
-            			mname : $('#username').val()
+    let join =(x)=>{
+            	let jdata = {
+            			mid : x.mid, 
+            			mpw : x.mpw,
+            			mname : x.mname
             			}
-            	alert('전송되는 데이터 : '+ data.mid + data.mpw + data.mname)
+            	alert('전송되는 데이터 : '+ jdata.mid + jdata.mpw + jdata.mname)
                 $.ajax({
 			    	url : _+'/customer/',
 			    	type : 'POST',
 			    	dataType : 'json',
-			    	data : JSON.stringify(data),
+			    	data : JSON.stringify(jdata),
 			    	contentType : 'application/json',
 			    	success : d => {
-			    		alert('AJAX 성공 아이디: '+d.mid+', 성공비번: '+d.mpw +d.mname)
+			    		alert('AJAX 성공')
 			    		login()
 			    	},
 			    	error : e => {
 			    		alert('AJAX 실패')
 			    	}
             	})
-                
             }
-        })
-        .addClass('btn btn-primary btn-lg btn-block')
-        .appendTo('#b_join_success')
-    }
     
     
     let login =()=>{
@@ -93,13 +98,34 @@ auth = (()=>{
     }
 
     let mypage =(d)=>{ 
+    	
     	let x = {
     			mid : d.mid,
     			mpw : d.mpw,
     			mname : d.mname
     	}
-    	$('head').html(auth_vue.mypage_head(x))
-        $('body').html(auth_vue.mypage_body(x))
+    	
+    	$.getScript(brd_vue_js).done(()=>{
+			$('head').html(brd_vue.brd_head(x))
+			$('body').html(brd_vue.brd_body(x))	
+		}).fail(()=>{alert(WHEN_ERR)})
+    }
+    
+    let existId =(x)=> {
+    	$.ajax({
+	    	url : _+'/customer/'+x.mid+'/checkId',
+	    	type : 'GET',
+	    	success : d => {
+	    		alert('AJAX 성공'+d.msg)
+	    		if(d.msg==='SUCCESS')
+	    			join(x)
+	    		else
+	    			alert('아이디가 중복됨.')
+	    	},
+	    	error : e => {
+	    		alert('AJAX 실패')
+	    	}
+    	})
     }
     
 	return {onCreate, join, login}	

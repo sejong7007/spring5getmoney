@@ -101,7 +101,7 @@ auth_vue = {
 		'          </div>'+
 		'          <div class="col-md-6 mb-3">'+
 		'            <label for="password">CUSTOMERPW</label>'+
-		'            <input type="text" class="form-control" id="password" placeholder="" value="" required="">'+
+		'            <input type="password" class="form-control" id="password" placeholder="" value="" required="">'+
 		'            <div class="invalid-feedback">'+
 		'              Valid last name is required.'+
 		'            </div>'+
@@ -294,23 +294,10 @@ auth_vue = {
 	},
 	
 	mypage_head: x=>{
-		return ' <link href="'+x.css+'/signin.css" rel="stylesheet">    '
+		return ''
 	},
 	
 	mypage_body: x=>{
-		return '<body class="sejong-oneform">'+
-		'<div></div>'+ x.mid+
-		'<div>여기는 어디??</div>'+x.mpw+
-		'<div>3</div>'+x.mname+
-		'<div>4</div>'+
-		'<div>5</div>'+
-		'<div>6</div>'+
-		'<div>7</div>'+
-		'<div>8</div>'+
-		'<div>9</div>'+
-		'<div>10</div>'+
-		'<div>11</div>'+
-		'<div>12</div>'+
-		'</body>'
+		return ''
 	}
 };

@@ -1,4 +1,4 @@
-package com.getmoney5.web.config;
+package com.getmoney5.web.ctx;
 
 
 import java.util.List;
@@ -27,7 +27,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
 @ComponentScan(basePackages = {"com.getmoney5.web"})
-public class ServletConfig implements WebMvcConfigurer {
+public class ServletContext implements WebMvcConfigurer {
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         InternalResourceViewResolver bean = new InternalResourceViewResolver();

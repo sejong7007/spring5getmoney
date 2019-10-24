@@ -1,18 +1,18 @@
-package com.getmoney5.web.config;
+package com.getmoney5.web.ctx;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 
-public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class WebContext extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] {RootConfig.class};
+		return new Class[] {RootContext.class};
 	}
 
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		return new Class[] {ServletConfig.class};
+		return new Class[] {ServletContext.class};
 	}
 
 	@Override

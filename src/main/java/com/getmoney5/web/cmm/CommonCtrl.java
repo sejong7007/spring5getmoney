@@ -25,12 +25,12 @@ public class CommonCtrl {
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", "welcome!!!!1");
 		
-/*		Date date = new Date();
+		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		
 		String formattedDate = dateFormat.format(date);
 		
-		model.addAttribute("serverTime", formattedDate );*/
+		model.addAttribute("serverTime", formattedDate );
 		
 		return "home";
 	}
