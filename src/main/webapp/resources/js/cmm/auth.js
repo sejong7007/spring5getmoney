@@ -18,6 +18,28 @@ auth = (()=>{
 				e.preventDefault()
 				$('head').html(auth_vue.join_head())
 				$('body').html(auth_vue.join_body())
+				$('#customerid').keyup(()=>{
+					if($('#customerid').val().length > 2) {
+						$.ajax({
+					    	url : _+'/customer/'+$('#customerid').val()+'/checkId',
+					    	type : 'GET',
+					    	success : d => {
+					    		alert('AJAX 성공'+d.msg)
+					    		if(d.msg==='SUCCESS')
+					    			$('#dupl-check')
+					    			.val('사용가능한 아이디 입니다.')
+					    			.css('color','blue')
+					    		else
+					    			$('#dupl-check')
+					    			.val('이미 사용중인 아이디 입니다.')
+					    			.css('color','red')
+					    	},
+					    	error : e => {
+					    		alert('AJAX 실패')
+					    	}
+				    	})
+					}
+				});
 				$('<button>',{
 						text : '회원가입',
 						href : '#',
@@ -28,7 +50,7 @@ auth = (()=>{
 				            			mpw : $('#password').val(),
 				            			mname : $('#username').val()
 				            			}
-								existId(data)
+								join(data)
 						}
 				})
 				.addClass('btn btn-primary btn-lg btn-block')
@@ -38,6 +60,9 @@ auth = (()=>{
 	}
 		
 	let setContentView =()=>{
+		$('head').html(auth_vue.login_head({css: $.css(), img: $.img()}))
+        $('body').addClass('text-center')
+        .html(auth_vue.login_body({css: $.css(), img: $.img()}))
 		login()
 	}
 	
@@ -56,6 +81,9 @@ auth = (()=>{
 			    	contentType : 'application/json',
 			    	success : d => {
 			    		alert('AJAX 성공')
+			    		$('head').html(auth_vue.login_head({css: $.css(), img: $.img()}))
+				        $('body').addClass('text-center')
+				        .html(auth_vue.login_body({css: $.css(), img: $.img()}))
 			    		login()
 			    	},
 			    	error : e => {
@@ -66,21 +94,19 @@ auth = (()=>{
     
     
     let login =()=>{
-    	let x = {css: $.css(), img: $.img()}
-    	$('head').html(auth_vue.login_head(x))
-        $('body').addClass('text-center')
-        .html(auth_vue.login_body(x))
+    	
         $('<button>',{
         	type : "submit",
         	text : "로그인",
         	click : e => {
         		e.preventDefault()
-        		let datat = {mid : $('#loginmid').val(), mpw : $('#loginmpw').val()}
-            	alert('전송되는 데이터 : '+ datat.mid + datat.mpw)
                 $.ajax({
                 	url : _+'/customer/login',
                 	type : 'POST',
-                	data : JSON.stringify(datat), 
+                	data : JSON.stringify({
+                		mid : $('#loginmid').val(), 
+                		mpw : $('#loginmpw').val()
+                	}), 
                 	dateType : 'json',
                 	contentType : 'application/json',
                 	success : d => {
@@ -118,7 +144,7 @@ auth = (()=>{
 	    	success : d => {
 	    		alert('AJAX 성공'+d.msg)
 	    		if(d.msg==='SUCCESS')
-	    			join(x)
+	    			alert('사용가능한 아이디 입니다.')
 	    		else
 	    			alert('아이디가 중복됨.')
 	    	},
