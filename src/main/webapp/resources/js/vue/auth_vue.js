@@ -294,13 +294,6 @@ auth_vue = {
 		'    <p class="mt-5 mb-3 text-muted">© 2017-2019</p>'+
 		'  </form>'+
 		'</body>'
-	},
-	
-	mypage_head: x=>{
-		return ''
-	},
-	
-	mypage_body: x=>{
-		return ''
 	}
+	
 };

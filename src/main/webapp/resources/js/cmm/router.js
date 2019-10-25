@@ -11,3 +11,14 @@ function Session(x){
 		css : ()=>{return sessionStorage.getItem('css');}
 	}
 }
+
+function CusData(x){
+	sessionStorage.setItem('smid', x.mid)
+	sessionStorage.setItem('smpw', x.mpw)
+	sessionStorage.setItem('smname', x.mname)
+	return{
+		smid : ()=>{return sessionStorage.getItem('smid')},
+		smpw : ()=>{return sessionStorage.getItem('smpw')},
+		smname : ()=>{return sessionStorage.getItem('smname')}
+	}
+}
