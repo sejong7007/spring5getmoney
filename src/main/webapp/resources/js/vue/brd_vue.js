@@ -151,7 +151,7 @@ brd_vue = {
 		'    <!-- Bootstrap core JavaScript'+
 		'    ================================================== -->'+
 		'    <!-- Placed at the end of the document so the pages load faster -->'+
-		'    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>'+
+		'    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" ></script>'+
 		'    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>'+
 		'    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>'+
 		'    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/holder.min.js"></script>'+
@@ -164,18 +164,16 @@ brd_vue = {
 	write: x=>{
 		return '<div class="container-fluid" style="width:80%">'
 		+'<h1>ARTICLE WRITING</h1>'
-		+'<form>'
-		+'<input id="s_writername" type="text" name="writer" style="margin-top:20px" class="form-control" />'
-		+'<input type="text" name="title" style="margin-top:20px" class="form-control" placeholder="제목" /><br />'
-		+'<div class="row">'
-		+'<div style="width:97%; margin:10px auto" >'
-		+'<textarea name="content" class="form-control" rows="10" id="comment"></textarea>'
-		+' </div>'
-		+' </div>'
-		+' <input type="reset" class="btn btn-danger" style="float:right;width:100px;margin-right:10px" value="CANCEL"/>'
-		+'<input name="write" type="submit" class="btn btn-primary" style="float:right;width:100px;margin-right:10px" value="SUBMIT"/>'
-		+'<input type="hidden" name="action" value="write"/>'
-		+'<input type="hidden" name="pageName" value="detail" />'
+		+'<form id="bbsubmit">' //$('#bbsubmit input[name=writer]')
+			+'<input type="text" name="writer" style="margin-top:20px" class="form-control" />' //id="s_writername"
+			+'<input type="text" name="title" style="margin-top:20px" class="form-control" placeholder="제목" /><br />'
+			+'<div class="row">'
+			+'<div style="width:97%; margin:10px auto" >'
+			+'<textarea name="content" class="form-control" rows="10"></textarea>'
+			+' </div>'
+			+' </div>'
+	/*		+'<input type="reset" class="btn btn-danger" style="float:right;width:100px;margin-right:10px" value="CANCEL"/>'
+			+'<input name="write" type="submit" class="btn btn-primary" style="float:right;width:100px;margin-right:10px" value="SUBMIT"/>'*/
 		+'</form>'
 		+'</div>'
 	}

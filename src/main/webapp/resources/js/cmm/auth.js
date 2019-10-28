@@ -113,10 +113,9 @@ auth = (()=>{
                 	contentType : 'application/json',
                 	success : d => {
                 		$.when(
-                			$.getScript(brd_js),
+                			$.getScript(brd_js, $.extend(new CusData(d))),
                 			$.getScript(router_js)		
                 		).done(()=>{
-                			$.extend(new CusData(d))
                 			alert(d.mid+d.mpw+d.mname+' , '+$.smid()+$.smpw()+$.smname())
                 			brd.onCreate()
                 		})
@@ -128,10 +127,9 @@ auth = (()=>{
                 		alert('AJAX ERROR')
                 	}
                 })
-                alert(d.mname+'님 환영합니다.')
         	}
         })
-        .addClass("btn btn-lg btn-primary btn-block")
+        .addClass('btn btn-lg btn-primary btn-block')
         .appendTo('#btn_login')
     }
         
