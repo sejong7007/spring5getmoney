@@ -6,5 +6,6 @@
     </settings>
     <typeAliases>
        <typeAlias alias="Customer"  type="com.getmoney5.web.customer.Customer"/>
+       <typeAlias alias="Article"  type="com.getmoney5.web.brd.Article"/>
     </typeAliases>
 </configuration>
