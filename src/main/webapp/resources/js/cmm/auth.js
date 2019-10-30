@@ -2,19 +2,25 @@
 var auth = auth || {};
 auth = (()=>{
 	const WHEN_ERR = '호출하는 JS파일을 찾지 못했습니다.'
-	let _, js, auth_vue_js, brd_js, router_js;
+	let _, js, css, img, auth_vue_js, brd_js, router_js, cookie_js;
 	let init =()=> {
-		_=$.ctx();
-		js=$.js();
+		_=$.ctx()
+		js=$.js()
+		css=$.css()
+		img=$.img()
 		auth_vue_js=js+'/vue/auth_vue.js'
 		brd_js = js+'/brd/brd.js'
 		router_js=js+'/cmm/router.js'
+		cookie_js=js+'/cmm/cookie.js'
 	}
 	
 	let onCreate =()=>{
 		init();
 		$.when(
-			$.getScript(auth_vue_js)
+			$.getScript(auth_vue_js),
+			$.getScript(brd_js),
+			$.getScript(router_js),
+			$.getScript(cookie_js)
 		).done(()=>{
 			setContentView()
 			$('#a_go_join').click(e=>{
@@ -112,16 +118,9 @@ auth = (()=>{
                 	dateType : 'json',
                 	contentType : 'application/json',
                 	success : d => {
-                		$.when(
-                			$.getScript(brd_js, $.extend(new CusData(d))),
-                			$.getScript(router_js)		
-                		).done(()=>{
-                			alert(d.mid+d.mpw+d.mname+' , '+$.smid()+$.smpw()+$.smname())
+                			setCookie("USERID", d.mid)
+                			alert(d.mid+' / '+d.mpw+' / '+d.mname+'님 환영합니다. 쿠기 : '+getCookie("USERID"))
                 			brd.onCreate()
-                		})
-                		.fail(()=>{
-                			alert(WHEN_ERR)
-                		})
                 	},
                 	error : e => {
                 		alert('AJAX ERROR')

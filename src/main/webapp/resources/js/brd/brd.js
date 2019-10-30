@@ -1,32 +1,40 @@
 "use strict";
 var brd = brd || {};
 brd = (()=>{
+
 	const WHEN_ERR = '호출하는 JS파일을 찾지 못했습니다.'
 	
-	let _, js, brd_vue_js, router_js, smname, smid;
+	let _, js, css, img, brd_vue_js, navi_js, navi_vue_js;
 	
 	let init =()=> {
 		_=$.ctx()
 		js=$.js()
-		smname=$.smname()
-		smid=$.smid()
-		brd_vue_js=js+'/vue/brd_vue.js'
-		router_js=js+'/cmm/router.js'
+		css=$.css()
+		img=$.img()
+		brd_vue_js = js+'/vue/brd_vue.js'
+		navi_js = js+'/cmm/navi.js'
+		navi_vue_js = js+'/vue/navi_vue.js'
 	}
 	
 	let onCreate =()=>{
 		init()
- 		$.getScript(brd_vue_js).done(()=>{
- 		 		setContentView()
- 				navigation()
- 				 }	
- 		)
+		$.when(
+				$.getScript(brd_vue_js),
+				$.getScript(navi_js),
+				$.getScript(navi_vue_js)
+		).done(()=>{
+			setContentView()
+			navi.onCreate()
+		}).fail(()=>{
+			alert(WHEN_ERR)
+		})
 	}
 	
 	let setContentView =()=>{
 			$('head').html(brd_vue.brd_head({css: $.css(), img: $.img()}))
 	        $('body').addClass('text-center')
-	        		 .html(brd_vue.brd_body({css: $.css(), img: $.img()}))
+	        		 .html(brd_vue.brd_body({cxt: '/web', css: $.css(), img: $.img()}))
+	        $(navi_vue.navi_body()).appendTo('#snavi_vue')
 	        recent_update()
 	        
 	        /*$('#recent_updates .media').remove()
@@ -49,7 +57,7 @@ brd = (()=>{
 			    $('<strong class="d-block text-gray-dark">@<a>'+j.mid+'</a></strong>')
 			    .appendTo("#id_"+i)
 			    .click(()=>{
-							alert('아이디 클릭')
+							alert('아이디 클릭 ')
 				})
 				$('<a>'+j.title+'</a>')
 				.appendTo("#id_"+i)
@@ -58,19 +66,16 @@ brd = (()=>{
 				     		detail(j)
 				     })
 	        })
-        	//$('#recent_updates').append(result)
         })
-        /*$('#recent_updates').append(smname+'<h1>등록된 글이 없습니다.</h1>')*/
 	}
 	
 	let write =()=>{
-		alert('글쓰기 클릭')
+		alert('글쓰기 클릭 ')
 		$('#recent_updates').html(brd_vue.write())
 		$('#suggestions').remove()
-		$('#bbsubmit input[name="writer"]').val(smname)
-		
+		$('#bbsubmit input[name="writer"]').val(getCookie("USERID"))
 		$('<input>', {
-        	/*type : "submit",*/
+        	type : "submit",
         	style : "float:right;width:100px;margin-right:10px",
 			value : "SUBMIT"
 		})
@@ -82,15 +87,14 @@ brd = (()=>{
         			url : _+'/articles/',
         			type : 'POST',
         			data : JSON.stringify({
-            			mid : smid,
+            			mid : $('#bbsubmit input[name="writer"]').val(),
             			title : $('#bbsubmit input[name="title"]').val(),
             			content : $('#bbsubmit textarea[name="content"]').val()
             			}),
         			dataType : 'json',
         			contentType : 'application/json',
         			success : d => {
-        				/*alert('AJAX 성공')
-        				setContentView()*/
+        				alert('AJAX 성공')
         				$('#recent_updates div.container-fluid').remove()
         				recent_update()
         			},
@@ -110,22 +114,11 @@ brd = (()=>{
 		.click( e => {
         		e.preventDefault()
         		alert('취소되었습니다.')
-        		setContentView()
+        		$('#recent_updates div.container-fluid').remove()
+				recent_update()
         	})
 	}
-	
-	let navigation = ()=>{
-		$('<a>',{
-		       	href : '#',
-		       	click : e =>{
-		       				e.preventDefault()
-		       				write()},
-				text : '글쓰기'
-		})
-		.addClass('nav-link')
-		.appendTo('#go_write')
-	}
-	
+		
 	let detail =x=> {
 		
 		$('#recent_updates').html(brd_vue.write())
@@ -192,6 +185,6 @@ brd = (()=>{
 		})
 	}
 	
-	return {onCreate}
+	return {onCreate, write}
 	
 })();
