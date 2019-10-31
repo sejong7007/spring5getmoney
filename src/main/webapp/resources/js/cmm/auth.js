@@ -139,7 +139,8 @@ auth = (()=>{
     	$('#a_go_admin').click(()=>{
     		let ok = confirm('사원입니까?')
         	if(ok){
-        		let aid = prompt('사원아이디를 입력하시오.')
+        		admin.onCreate()
+        		/*let aid = prompt('사원아이디를 입력하시오.')
         		$.ajax({
         			url : _+'/admins/'+aid,
         			type : 'POST',
@@ -162,7 +163,7 @@ auth = (()=>{
         			error : e=>{
         				alert('AJAX 실패')
         			}
-        		})
+        		})*/
         	}
     	})
     	

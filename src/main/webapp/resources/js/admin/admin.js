@@ -5,7 +5,7 @@ admin = (()=>{
 	
 	const WHEN_ERR = '호출하는 JS파일을 찾지 못했습니다.'
 		
-	let _, js, css, img, brd_vue_js, navi_vue_js, navi_js
+	let _, js, css, img, brd_vue_js, navi_vue_js
 	
 	let init = ()=>{
 		_=$.ctx()
@@ -13,7 +13,6 @@ admin = (()=>{
 		css=$.css()
 		img=$.img()
 		brd_vue_js = js+'/vue/brd_vue.js'
-		navi_js = js+'/cmm/navi.js'
 		navi_vue_js = js+'/vue/navi_vue.js'
 		
 	}
@@ -23,7 +22,6 @@ admin = (()=>{
 		init()
 		$.when(
 			$.getScript(brd_vue_js),
-			$.getScript(navi_js),
 			$.getScript(navi_vue_js)
 		).done(()=>{
 			setContentView()
@@ -35,7 +33,7 @@ admin = (()=>{
 	
 	let setContentView = ()=>{
 		
-		$('head').html('<head>'+
+		/*$('head').html('<head>'+
 				'<meta charset="utf-8">'+
 			    '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">'+
 				'    <meta name="description" content="">'+
@@ -48,24 +46,141 @@ admin = (()=>{
 				'    <!-- Custom styles for this template -->'+
 				'    <link href="https://getbootstrap.com/docs/4.0/examples/offcanvas/offcanvas.css" rel="stylesheet">'+
 				'<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">'+
-				'  </head>')
+				'  </head>')*/
+				
 		//$('head').html(brd_vue.brd_head({css: $.css(), img: $.img()}))		
 
-		$('body').html(navi_vue.navi_body({cxt: '/web', css: $.css(), img: $.img()}))
+		//$('body').html(navi_vue.navi_body({cxt: '/web', css: $.css(), img: $.img()}))
+				
+		$('body').empty()
+		$(navi_vue.navi_body()).appendTo('body')
+						
+		$('<table id="tab"><tr></tr></table>')
+			.css({ border: '1px solid black', width: '80%', height : '90%', margin : '0 auto'})
+			.appendTo('body')
+			
+		//let arr1 = [{id : 'left',width : '20%'},{id : 'right', width : '80%'}]
 		
-		/*$('head').html(brd_vue.brd_head({css: $.css(), img: $.img()}))
-        $('body').addClass('text-center')
-        		 .html(brd_vue.brd_body({cxt: '/web', css: $.css(), img: $.img()}))
-        $(navi_vue.navi_body()).appendTo('#snavi_vue')*/
+		//let arr2 = ['15%','85%']
 		
-		$('<table id="customers">'+
-		'  <tr>'+
-		'		<th>Company</th>'+
-		'		<th>Contact</th>'+
-		'  		<th>Country</th>'+
-		'	</tr>'+
-		'</table>').appendTo($('body'))
+		$.each([{id : 'left',width : '20%'},{id : 'right', width : '80%'}], (i,j)=>{
+			$('<td id="'+j.id+'"></td>')
+			.css({border: '2px solid black', width: j.width, 'vertical-align':'top'})
+			.appendTo('#tab tr')
+		})
+			
+		$.each([{txt : '웹크롤링', name : 'web_crawl'},
+				{txt : '고객관리', name : 'cusmgt'},
+				{txt : '상품등록', name : 'itemreg'},
+				{txt : '상품조회', name : 'itemsrch'},
+				{txt : '상품관리', name : 'itemmgt'},
+				{txt : '상품삭제', name : 'itemdel'}],
+			(i,j)=>{
+				$('<div name="'+j.name+'">'+j.txt+'</div>')
+				.css({border: '2px solid blue', margin : '0 auto', 'line-height':'50px'})
+				.appendTo('#left')
+				.click(function(){
+					$(this).addClass('active')
+					$(this).siblings().removeClass('active')
+					switch($(this).attr('name')){
+					case 'web_crawl':
+						web_crawl()
+						break;
+					case 'cusmgt':
+						cusmgt()
+						break;
+					case 'itemreg':
+						itemreg()
+						break;
+					case 'itemsrch':
+						itemsrch()
+						break;
+					case 'itemmgt':
+						itemmgt()
+						break;
+					case 'itemdel':
+						itemdel()
+						break;
+					}
+					
+				})
+			})
+
+		let web_crawl=()=>{
+			$('<form class="form-inline my-2 my-lg-0" action="/action_page.php">'+
+			'  <select name="cars" size="1" multiple>'+
+			'    <option value="politicsnews">정치</option>'+
+			'    <option value="biznews">경제</option>'+
+			'    <option value="socinews">사회</option>'+
+			'    <option value="livingnews">생활</option>'+
+			'    <option value="itnews">IT</option>'+
+			'    <option value="sportsnews">스포츠 뉴스</option>'+
+			'  </select>'+
+			//'</form>'+
+			//'<form class="form-inline my-2 my-lg-0">'+		
+			'  <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">	'+
+			'  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>'+
+			'</form>')
+			.css({margin : '0 auto'})
+			.appendTo('#right')
+			
+			/*'<form class="form-inline my-2 my-lg-0">'+		
+			'  <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">	'+
+			'  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>'+
+			'</form>'*/
+			
+		}	
+			
+		let cusmgt=()=>{
+			alert('cusmgt 화면 들어옴')
+		}
 		
+		let itemreg=()=>{
+			alert('itemreg 화면 들어옴')
+		}
+		
+		let itemsrch=()=>{
+			alert('itemsrch 화면 들어옴')
+		}
+		
+		let itemmgt=()=>{
+			alert('itemmgt 화면 들어옴')
+		}
+		
+		let itemdel=()=>{
+			alert('itemdel 화면 들어옴')
+		}
+		
+		// $('#left').css({border: '2px solid black', width: '20%', 'vertical-align':'top'})	
+			
+		//$('#left div').css({border: '2px solid blue', margin : '0 auto', 'line-height':'50px'})
+			
+		
+		/*$('<div id="adminclick1">고객관리</div>')
+			.css({ border: '1px solid black', width: '100%', 'background-color': '#e3ffe0' , 
+				   height : '50px', 'line-height':'50px' })
+			.appendTo('#left')
+			
+		$('<div>상품관리</div>')
+			.css({ border: '1px solid black', width: '100%',  'background-color': '#e3ffe0' , 
+				   height : '50px', 'line-height':'50px'})
+			.appendTo('#left')
+		
+		$('<div>수정</div>')
+			.css({ border: '1px solid black', width: '100%',  'background-color': '#e3ffe0' , 
+				   height : '50px', 'line-height':'50px'})
+			.appendTo('#left')
+			
+		$('<div>추가</div>')
+			.css({ border: '1px solid black', width: '100%',  'background-color': '#e3ffe0' , 
+				   height : '50px', 'line-height':'50px'})
+			.appendTo('#left')
+		
+		$('<div>삭제</div>')
+			.css({ border: '1px solid black', width: '100%',  'background-color': '#e3ffe0' , 
+				   height : '50px', 'line-height':'50px'})
+			.appendTo('#left')*/
+			
 	}
 	
 	return {onCreate}
