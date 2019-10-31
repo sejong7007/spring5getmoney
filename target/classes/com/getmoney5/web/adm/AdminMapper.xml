@@ -10,5 +10,13 @@
 		SELECT COUNT(*) COUNT FROM ADMIN
 	
 	</select>
+	
+	<select id="selectByIdPw" resultType="Admin">
+	
+		SELECT * FROM ADMIN WHERE AID LIKE #{aid}
+	
+	</select>
+	
+	
 
   </mapper>

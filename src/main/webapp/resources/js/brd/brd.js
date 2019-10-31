@@ -74,6 +74,7 @@ brd = (()=>{
 		$('#recent_updates').html(brd_vue.write())
 		$('#suggestions').remove()
 		$('#bbsubmit input[name="writer"]').val(getCookie("USERID"))
+		
 		$('<input>', {
         	type : "submit",
         	style : "float:right;width:100px;margin-right:10px",

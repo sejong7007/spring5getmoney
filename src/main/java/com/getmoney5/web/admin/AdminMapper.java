@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 public interface AdminMapper {
 
 	public int countAdmin();
+
+	public Admin selectByIdPw(Admin param);
 	
 }

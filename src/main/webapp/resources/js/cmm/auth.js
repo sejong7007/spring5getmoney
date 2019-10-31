@@ -2,7 +2,7 @@
 var auth = auth || {};
 auth = (()=>{
 	const WHEN_ERR = '호출하는 JS파일을 찾지 못했습니다.'
-	let _, js, css, img, auth_vue_js, brd_js, router_js, cookie_js;
+	let _, js, css, img, auth_vue_js, brd_js, router_js, cookie_js, admin_js;
 	let init =()=> {
 		_=$.ctx()
 		js=$.js()
@@ -12,6 +12,7 @@ auth = (()=>{
 		brd_js = js+'/brd/brd.js'
 		router_js=js+'/cmm/router.js'
 		cookie_js=js+'/cmm/cookie.js'
+		admin_js=js+'/admin/admin.js'
 	}
 	
 	let onCreate =()=>{
@@ -20,7 +21,8 @@ auth = (()=>{
 			$.getScript(auth_vue_js),
 			$.getScript(brd_js),
 			$.getScript(router_js),
-			$.getScript(cookie_js)
+			$.getScript(cookie_js),
+			$.getScript(admin_js)
 		).done(()=>{
 			setContentView()
 			$('#a_go_join').click(e=>{
@@ -73,6 +75,7 @@ auth = (()=>{
         $('body').addClass('text-center')
         .html(auth_vue.login_body({css: $.css(), img: $.img()}))
 		login()
+		access()
 	}
 	
     let join =(x)=>{
@@ -115,7 +118,7 @@ auth = (()=>{
                 		mid : $('#loginmid').val(), 
                 		mpw : $('#loginmpw').val()
                 	}), 
-                	dateType : 'json',
+                	dataType : 'json',
                 	contentType : 'application/json',
                 	success : d => {
                 			setCookie("USERID", d.mid)
@@ -132,6 +135,39 @@ auth = (()=>{
         .appendTo('#btn_login')
     }
         
+    let access = ()=>{
+    	$('#a_go_admin').click(()=>{
+    		let ok = confirm('사원입니까?')
+        	if(ok){
+        		let aid = prompt('사원아이디를 입력하시오.')
+        		$.ajax({
+        			url : _+'/admins/'+aid,
+        			type : 'POST',
+        			data : JSON.stringify({
+        				aid : aid,
+        				apw : prompt('비밀번호를 입력하시오.')
+        			}),
+        			dataType : 'json',
+        			contentType : 'application/json',
+        			success : d =>{
+        				alert('ajax갔다옴'+d.aid)
+        				if(d.msg === 'SUCCESS'){
+        					admin.onCreate()
+        				}else{
+        					alert('접근권한이 없습니다.')
+        					app.run(_)
+        				}
+        				
+        			},
+        			error : e=>{
+        				alert('AJAX 실패')
+        			}
+        		})
+        	}
+    	})
+    	
+    }
+    
     let existId =(x)=> {
     	$.ajax({
 	    	url : _+'/customer/'+x.mid+'/checkId',
