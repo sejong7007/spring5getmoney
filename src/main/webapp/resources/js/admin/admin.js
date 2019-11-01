@@ -107,27 +107,52 @@ admin = (()=>{
 			})
 
 		let web_crawl=()=>{
-			$('<form class="form-inline my-2 my-lg-0" action="/action_page.php">'+
-			'  <select name="cars" size="1" multiple>'+
-			'    <option value="politicsnews">정치</option>'+
-			'    <option value="biznews">경제</option>'+
-			'    <option value="socinews">사회</option>'+
-			'    <option value="livingnews">생활</option>'+
-			'    <option value="itnews">IT</option>'+
-			'    <option value="sportsnews">스포츠 뉴스</option>'+
+			
+			$('<form id="crawl_form" class="form-inline my-2 my-lg-0" action="/action_page.php">'+
+			'  <select name="site" size="1">'+
 			'  </select>'+
-			//'</form>'+
-			//'<form class="form-inline my-2 my-lg-0">'+		
 			'  <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">	'+
-			'  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>'+
 			'</form>')
-			.css({margin : '0 auto'})
 			.appendTo('#right')
 			
-			/*'<form class="form-inline my-2 my-lg-0">'+		
-			'  <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">	'+
-			'  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>'+
-			'</form>'*/
+			$.each([ {name : 'naver', nick : '네이버'},
+					 {name : 'google', nick : '구글'},
+					 {name : 'daum', nick : '다음'},
+					 {name : 'youtube', nick : '유투브'} ],
+					(i,j)=>{
+						$('<option value="'+j.name+'">'+j.nick+'</option>')
+						.appendTo('#crawl_form select')
+					})
+					
+			$('<button>',{
+				type : "submit",
+				text : "Search"
+			})
+			.addClass('btn btn-outline-success my-2 my-sm-0')
+			.appendTo('#crawl_form')
+			.click(e=>{
+				e.preventDefault()
+				alert($('#crawl_form select').val()+' , '+ $('#crawl_form input').val())
+				let arr = [$('#crawl_form select').val(), $('#crawl_form input').val()]
+				if(!$.fn.nullChecker(arr)
+				){
+					$.getJSON(_+'/txctrls/'+arr[0]+'/'+arr[1],
+						d=>{
+							alert('AJAX 성공'+d.msg)
+						})
+				} //if end
+				
+				/*$.ajax({
+					url : _+'/txctrls/'+$('#crawl_form input').val(),
+					contentType : 'application/json',
+					success : d => {
+						alert('AJAX 성공')
+					},
+					error : e => {
+						alert('AJAX 실패')
+					}
+				})*/
+			})
 			
 		}	
 			
