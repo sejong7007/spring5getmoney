@@ -6,17 +6,14 @@
   <mapper namespace="com.getmoney5.web.admin.AdminMapper">
 
 	<select id="countAdmin" resultType="int">
-	
 		SELECT COUNT(*) COUNT FROM ADMIN
-	
 	</select>
 	
 	<select id="selectByIdPw" resultType="Admin">
-	
 		SELECT * FROM ADMIN WHERE AID LIKE #{aid}
-	
 	</select>
-	
+
+		
 	
 
   </mapper>
