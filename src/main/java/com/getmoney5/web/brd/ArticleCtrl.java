@@ -1,5 +1,6 @@
 package com.getmoney5.web.brd;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class ArticleCtrl {
 
 	private static final Logger logger = LoggerFactory.getLogger(ArticleCtrl.class);
 	
-	@Autowired Map<String, Object> map;
+	@Autowired Map<String, Object> Articlemap;
 	@Autowired Article art;
 	@Autowired Printer printer;
 	@Autowired ArticleMapper artMapper;
@@ -37,64 +38,51 @@ public class ArticleCtrl {
 		printer.accept("글쓰기 들어옴");
 		IConsumer<Article> c = t -> artMapper.insertArticle(param); 
 		c.accept(param);
-		map.clear();
-		map.put("msg","SUCCESS");
-		printer.accept("글쓰기 나감"+map.get("msg"));
-		return map;
+		Articlemap.clear();
+		Articlemap.put("msg","SUCCESS");
+		printer.accept("글쓰기 나감"+Articlemap.get("msg"));
+		return Articlemap;
 	}
 	
-	@GetMapping("/")
-	public List<Article> listArt(){
+	@GetMapping("/{pageNo}")
+	public Map<?,?> listArt(@PathVariable String pageNo){
 		list.clear();
 		ISupplier<List<Article>> s = () -> artMapper.selectAll();
-		printer.accept("전체글목록 \n"+s.get());
-		return s.get();
+		Articlemap.clear();
+		Articlemap.put("articles", s.get());
+		Articlemap.put("pages", Arrays.asList(1,2,3,4,5));
+		return Articlemap;
 	}
 	
-	@PostMapping("/updateArt")
+	@PutMapping("/")
 	public Map<?,?> updateArticle(@RequestBody Article param){
 		printer.accept("글 수정 요청 : "+param.getArtseq()+", "+param.getTitle()+", "+param.getContent());
 		IConsumer<Article> c = t -> artMapper.updateByArtseq(param);
 		c.accept(param);
-		map.clear();
-		map.put("msg", "SUCCESS");
-		return map;
+		Articlemap.clear();
+		Articlemap.put("msg", "SUCCESS");
+		return Articlemap;
 	}
 	
-	@PostMapping("/deleteArt")
+	@DeleteMapping("/")
 	public Map<?,?> deleteArticle(@RequestBody Article param){
 		printer.accept("글 삭제 요청"+param.getArtseq());
 		IConsumer<Article> c = t -> artMapper.deleteById(param);
 		c.accept(param);
-		map.clear();
-		map.put("msg", "SUCCESS");
-		return map;
+		Articlemap.clear();
+		Articlemap.put("msg", "SUCCESS");
+		return Articlemap;
 	}
 	
 	@GetMapping("/countArt")
 	public Map<?,?> countArt() {
 		ISupplier<String> s = () -> artMapper.countArticle();
-		map.clear();
-		map.put("count", s.get());
-		return map;
+		Articlemap.clear();
+		Articlemap.put("count", s.get());
+		return Articlemap;
 	}
 	
-	@GetMapping("/{artseq}")
-	public Article searchArticle(@PathVariable String artseq, @RequestBody Article param){
-		return null;
-	}
+
 	
-	@PutMapping("/{artseq}")
-	public Article updateArticle(@PathVariable String artseq, @RequestBody Article param){
-		return null;
-	}
-	
-	@DeleteMapping("/{artseq}")
-	public Map<?,?> deleteArticle(@PathVariable String artseq, @RequestBody Article param){
-		
-		map.clear();
-		map.put("msg","SUCCESS");
-		return map;
-	}
 	
 }
