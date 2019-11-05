@@ -13,13 +13,13 @@
         SELECT COUNT(*) FROM ARTICLE
     </select>
     
-    <select id="selectAll" resultType="Article">
+    <select id="selectAll" resultType="Article" parameterType="Proxy">
        	SELECT A.ART_TYPE AS artType, A.*
    		FROM
    		(SELECT * 
    		FROM ARTICLE 
    		ORDER BY ARTSEQ DESC) A
-   		LIMIT 0, 5
+   		LIMIT #{startRow}, #{pageSize}
     </select>
     
     <delete id="deleteById" parameterType="Article">

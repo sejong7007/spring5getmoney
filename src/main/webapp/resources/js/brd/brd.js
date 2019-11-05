@@ -4,7 +4,7 @@ brd = (()=>{
 
 	const WHEN_ERR = '호출하는 JS파일을 찾지 못했습니다.'
 	
-	let _, js, css, img, brd_vue_js, navi_js, navi_vue_js, page_vue_js;
+	let _, js, css, img, brd_vue_js, navi_js, navi_vue_js, page_vue_js, compo_vue_js;
 	
 	let init =()=> {
 		_=$.ctx()
@@ -15,6 +15,7 @@ brd = (()=>{
 		navi_js = js+'/cmm/navi.js'
 		navi_vue_js = js+'/vue/navi_vue.js'
 		page_vue_js = js+'/vue/page_vue.js'
+		compo_vue_js = js+'/vue/compo_vue.js'
 	}
 	
 	let onCreate =()=>{
@@ -23,7 +24,8 @@ brd = (()=>{
 				$.getScript(brd_vue_js),
 				$.getScript(navi_js),
 				$.getScript(navi_vue_js),
-				$.getScript(page_vue_js)
+				$.getScript(page_vue_js),
+				$.getScript(compo_vue_js)
 		).done(()=>{
 			setContentView()
 			navi.onCreate()
@@ -37,7 +39,7 @@ brd = (()=>{
 	        $('body').addClass('text-center')
 	        		 .html(brd_vue.brd_body({cxt: '/web', css: $.css(), img: $.img()}))
 	        $(navi_vue.navi_body()).appendTo('#snavi_vue')
-	        recent_update(1)
+	        recent_update({page : '1', size : '5'})
 	        
 	        /*$('#recent_updates .media').remove()
 	        $('#recent_updates .d-block').remove()
@@ -48,7 +50,7 @@ brd = (()=>{
 		$('#recent_updates .media').remove()
 		$('#suggestions').remove()
         $('#recent_updates .d-block').remove()
-        $.getJSON(_+'/articles/'+x, d=>{
+        $.getJSON(_+'/articles/page/'+x.page+'/size/'+x.size, d=>{
         	alert('getJSON 성공')
         	$.each(d.articles, (i,j)=>{
         		$('<div class="media text-muted pt-3">'+
@@ -70,11 +72,32 @@ brd = (()=>{
 	        })
 	        $(page_vue.pagination()).appendTo('#recent_updates')
 	        $('#pagination').empty()
+	        
+	        $('<form id="listSizeSelectDiv2" class="form-inline my-2 my-lg-0" action="/action_page.php">'+
+	    			'  <select name="site" size="1">'+
+	    			'  </select>'+
+	    			'</form>')
+	    	.prependTo('#recent_updates div.container')
+	        
+	        $.each(['5','10','15'],(i,j)=>{
+	        	$('<option value="page_size">'+j+'개보기</option>')
+	        	.appendTo('#listSizeSelectDiv2 select')
+	        })
 
 	        $.each(d.pages,(i,j)=>{
 	        	$('<li class="page-item"><a class="page-link" href="#">'+j+'</a></li>')
 	        	.appendTo('#pagination')
+	        	.click(()=>{
+	        		alert(j+'페이지 이동')
+	        		$('#recent_updates').empty()
+	        		recent_update({page : j, size : '5'})
+	        	})
 	        })
+	        
+	        $('#pagination').css({'justify-content' : 'center'})
+	        $('#listSizeSelectDiv2 select').css({'margin-inline-start': 'auto'})
+	        
+	        $('#recent_updates h2').remove()
 
 	        /*let t = ''
 	        let i = 0
@@ -124,7 +147,7 @@ brd = (()=>{
         			success : d => {
         				alert('AJAX 성공')
         				$('#recent_updates div.container-fluid').remove()
-        				recent_update()
+        				recent_update({page : '1', size : '5'})
         			},
         			error : e => {
         				alert('AJAX 실패')
@@ -143,7 +166,7 @@ brd = (()=>{
         		e.preventDefault()
         		alert('취소되었습니다.')
         		$('#recent_updates div.container-fluid').remove()
-				recent_update()
+				recent_update({page : '1', size : '5'})
         	})
 	}
 		
@@ -176,7 +199,7 @@ brd = (()=>{
         			success : d => {
         				alert('선택하신 글이 수정되었습니다.')
         				$('#recent_updates div.container-fluid').remove()
-        				recent_update()
+        				recent_update({page : '1', size : '5'})
         			},
         			error : e => {
         				alert('AJAX 실패')
@@ -194,7 +217,7 @@ brd = (()=>{
 		.click( e => {
 			e.preventDefault()
 			$.ajax({
-				url : _+'/articles/deleteArt',
+				url : _+'/articles/',
 				type : 'DELETE',
 				data : JSON.stringify({
 	    			artseq : x.artseq,
@@ -204,7 +227,7 @@ brd = (()=>{
 				success : d => {
 					alert('선택하신 글이 삭제되었습니다.')
 					$('#recent_updates div.container-fluid').remove()
-					recent_update()
+					recent_update({page : '1', size : '5'})
 				},
 				error : e => {
 					alert('AJAX 실패')

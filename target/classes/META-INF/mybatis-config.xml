@@ -8,5 +8,6 @@
        <typeAlias alias="Customer"  type="com.getmoney5.web.customer.Customer"/>
        <typeAlias alias="Article"  type="com.getmoney5.web.brd.Article"/>
        <typeAlias alias="Admin"  type="com.getmoney5.web.admin.Admin"/>
+       <typeAlias alias="Proxy"  type="com.getmoney5.web.pxy.Proxy"/>
     </typeAliases>
 </configuration>
