@@ -1,5 +1,6 @@
 package com.getmoney5.web.brd;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -54,18 +55,18 @@ public class ArticleCtrl {
 	
 	@GetMapping("/page/{pageNo}/size/{pageSize}")
 	public Map<?,?> listArt(@PathVariable String pageNo, @PathVariable String pageSize){
+		System.out.println("넘어오는 값 : "+pageNo+" , "+pageSize);
 		pxy.setPageNum(pxy.parseInt(pageNo));
 		pxy.setPageSize(pxy.parseInt(pageSize));
 		pxy.paging();
 		list.clear();
 		ISupplier<List<Article>> s = () -> artMapper.selectAll(pxy);
-		
-		map.accept(Arrays.asList("articles", "pages"),Arrays.asList(s.get(), Arrays.asList(1,2,3,4,5))) ;
-		
-		/*Articlemap.clear();
-		Articlemap.put("articles", s.get());
-		Articlemap.put("pages", Arrays.asList(1,2,3,4,5));*/
-		
+		List<Integer> pagelist = new ArrayList<>();
+		for( int i=pxy.getStartPage(); i<pxy.getEndPage()+1 ; i++) {
+			pagelist.add(i);
+		}
+		map.accept(Arrays.asList("articles", "pages", "pxy"),
+				   Arrays.asList(s.get(), pagelist, pxy)) ;
 		return map.get();
 	}
 	

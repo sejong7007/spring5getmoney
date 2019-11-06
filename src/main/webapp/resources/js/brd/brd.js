@@ -40,16 +40,13 @@ brd = (()=>{
 	        		 .html(brd_vue.brd_body({cxt: '/web', css: $.css(), img: $.img()}))
 	        $(navi_vue.navi_body()).appendTo('#snavi_vue')
 	        recent_update({page : '1', size : '5'})
-	        
-	        /*$('#recent_updates .media').remove()
-	        $('#recent_updates .d-block').remove()
-	        $('#recent_updates').append(smname+'<h1>등록된 글이 없습니다.</h1>')*/
 	}
 	
 	let recent_update=x=>{
 		$('#recent_updates .media').remove()
 		$('#suggestions').remove()
         $('#recent_updates .d-block').remove()
+        $('#recent_updates .container').remove()
         $.getJSON(_+'/articles/page/'+x.page+'/size/'+x.size, d=>{
         	alert('getJSON 성공')
         	$.each(d.articles, (i,j)=>{
@@ -79,43 +76,53 @@ brd = (()=>{
 	    			'</form>')
 	    	.prependTo('#recent_updates div.container')
 	        
-	        $.each(['5','10','15'],(i,j)=>{
-	        	$('<option value="page_size">'+j+'개보기</option>')
+	        $.each([{sub:'5개보기', val: '5'},
+	        		{sub:'10개보기', val: '10'},
+	        		{sub:'15개보기', val:'15'}],(i,j)=>{
+	        	$('<option value='+j.val+'>'+j.sub+'</option>')
 	        	.appendTo('#listSizeSelectDiv2 select')
 	        })
+	        
+	        $('#listSizeSelectDiv2 option[value="'+d.pxy.pageSize+'"]').attr('selected',true)
+	        $('#listSizeSelectDiv2').change(()=>{
+	        	alert('선택한 보기 : '+ $('#listSizeSelectDiv2 option:selected').val())
+	        	recent_update({page : '1', size : $('#listSizeSelectDiv2 option:selected').val()})
+	        })
+	        
+	        if(d.pxy.existPrev){
+	        	$('<li class="page-item"><a class="page-link" href="#">Previous</a></li>')
+	        	.appendTo('#pagination')
+	        	.click(()=>{
+	        		let nextpage = d.pxy.startPage - 1
+	        		alert('이전 블럭으로 이동'+nextpage)
+	        		recent_update({page : nextpage, size : '5'})	        	
+	        })
+	        }
 
 	        $.each(d.pages,(i,j)=>{
 	        	$('<li class="page-item"><a class="page-link" href="#">'+j+'</a></li>')
 	        	.appendTo('#pagination')
 	        	.click(()=>{
 	        		alert(j+'페이지 이동')
-	        		$('#recent_updates').empty()
 	        		recent_update({page : j, size : '5'})
 	        	})
 	        })
+	        
+	        if(d.pxy.existNext){
+	        $('<li class="page-item"><a class="page-link" href="#">Next</a></li>')
+	        .appendTo('#pagination')
+	        .click(()=>{
+	        	let nextpage = d.pxy.endPage + 1
+	        	alert('다음 블럭으로 이동'+nextpage)
+        		recent_update({page : nextpage, size : '5'})	        	
+	        })
+	        }
 	        
 	        $('#pagination').css({'justify-content' : 'center'})
 	        $('#listSizeSelectDiv2 select').css({'margin-inline-start': 'auto'})
 	        
 	        $('#recent_updates h2').remove()
 
-	        /*let t = ''
-	        let i = 0
-	        for(;i<d.length/5;i++){
-	        	t += '<li class="page-item"><a class="page-link" href="#">'+(i+1)+'</a></li>'
-	        }
-        	$(t).appendTo('#pagination')*/
-        	
-
-        	/*t += '<li class="page-item"><a class="page-link" href="#">1</a></li>'
-	       	t += '<li class="page-item"><a class="page-link" href="#">2</a></li>'
-	       	t += '<li class="page-item"><a class="page-link" href="#">3</a></li>'*/
-	        
-	    /*$(page_vue_js.pagination())
-        .appendTo('#recent_updates')
-        $('#pagination').empty()
-        <li class="page-item"><a class="page-link" href="#">1</a></li> */
-        
         })
 	}
 	

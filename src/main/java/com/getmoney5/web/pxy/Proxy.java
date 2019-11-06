@@ -3,6 +3,7 @@ package com.getmoney5.web.pxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.jsoup.Connection;
@@ -22,9 +23,10 @@ import lombok.Data;
 @Lazy
 public class Proxy {
 	
-	private int pageNum, pageSize, startRow, endRow;
-	private String search;
+	private int pageNum, pageSize, startRow, endRow, startPage, endPage ;
+	private boolean existPrev, existNext;
 	private final int BLOCK_SIZE = 5;
+	private String search;
 	
 	@Autowired ArticleMapper artMapper;
 	
@@ -37,11 +39,11 @@ public class Proxy {
 		//endRow = (pageNum == pageCount)? (totalCount % pageSize) : pageSize ;
 		endRow = (pageNum == pageCount) ? totalCount-1 : startRow+pageSize-1 ;
 		int blockCount = (pageCount%BLOCK_SIZE==0)? pageCount/BLOCK_SIZE : (pageCount/BLOCK_SIZE)+1 ;
-		int blockNum = (pageNum-1)/BLOCK_SIZE;
-		int startPage = (blockCount-1)*BLOCK_SIZE + 1 ;
-		int endPage = (blockCount==blockNum)? pageCount : startPage+4 ;
-		boolean existPrev = false;
-		boolean existNext = false;
+		int blockNum = (pageNum-1) / BLOCK_SIZE;
+		startPage = blockNum * BLOCK_SIZE + 1 ;
+		endPage = (blockCount != (blockNum+1))? startPage + BLOCK_SIZE - 1 : pageCount ;
+		existPrev = (blockNum!=0);
+		existNext = ((blockNum+1)!=blockCount);
 	}
 	
 	public int parseInt(String param) {
@@ -67,5 +69,12 @@ public class Proxy {
 		
 		return proxyList;
 	}
+
+	public int random(int a, int b) {
+		BiFunction<Integer, Integer, Integer> f = (x , y) -> (int)(Math.random()*(y-x))+x; 
+		return f.apply(a, b);
+	}
+	
+	
 	
 }
