@@ -61,12 +61,16 @@ public class ArticleCtrl {
 		pxy.paging();
 		list.clear();
 		ISupplier<List<Article>> s = () -> artMapper.selectAll(pxy);
-		List<Integer> pagelist = new ArrayList<>();
+		
+		/*List<Integer> pagelist = new ArrayList<>();
 		for( int i=pxy.getStartPage(); i<pxy.getEndPage()+1 ; i++) {
 			pagelist.add(i);
-		}
-		map.accept(Arrays.asList("articles", "pages", "pxy"),
-				   Arrays.asList(s.get(), pagelist, pxy)) ;
+		}*/
+		
+		System.out.println("넘어가는 값 : "+pxy.getPages());
+		
+		map.accept(Arrays.asList("articles", "pxy"),
+				   Arrays.asList(s.get(), pxy)) ;
 		return map.get();
 	}
 	

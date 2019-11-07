@@ -92,29 +92,45 @@ brd = (()=>{
 	        if(d.pxy.existPrev){
 	        	$('<li class="page-item"><a class="page-link" href="#">Previous</a></li>')
 	        	.appendTo('#pagination')
-	        	.click(()=>{
-	        		let nextpage = d.pxy.startPage - 1
-	        		alert('이전 블럭으로 이동'+nextpage)
-	        		recent_update({page : nextpage, size : '5'})	        	
+	        	.click(e=>{
+	        		e.preventDefault()
+	        		alert('이전 블럭으로 이동'+ d.pxy.prePage)
+	        		recent_update({page : d.pxy.prePage, size : d.pxy.pageSize})	        	
 	        })
 	        }
 
-	        $.each(d.pages,(i,j)=>{
+        	let i = 0
+        	for( i=d.pxy.startPage; i<d.pxy.endPage+1 ; i++) {
+        		if(i==d.pxy.pageNum){
+        			$('<li class="page-item"><a class="page-link" href="#">'+i+'</a></li>')
+    	        	.appendTo('#pagination')
+    	        	.addClass('active')
+        		}else {
+        			$('<li class="page-item"><a class="page-link" href="#">'+i+'</a></li>')
+    	        	.appendTo('#pagination')
+    	        	.click(function(){
+    	        		alert($(this).children('.page-link').text()+'페이지 이동')
+    	        		recent_update({page : $(this).children('.page-link').text(), size : d.pxy.pageSize})
+    	        		})
+        		}
+        	}
+        	
+	        /*$.each(d.pxy.pages,(i,j)=>{
 	        	$('<li class="page-item"><a class="page-link" href="#">'+j+'</a></li>')
 	        	.appendTo('#pagination')
 	        	.click(()=>{
 	        		alert(j+'페이지 이동')
-	        		recent_update({page : j, size : '5'})
+	        		recent_update({page : j, size : d.pxy.pageSize})
 	        	})
-	        })
+	        })*/
 	        
 	        if(d.pxy.existNext){
 	        $('<li class="page-item"><a class="page-link" href="#">Next</a></li>')
 	        .appendTo('#pagination')
-	        .click(()=>{
-	        	let nextpage = d.pxy.endPage + 1
-	        	alert('다음 블럭으로 이동'+nextpage)
-        		recent_update({page : nextpage, size : '5'})	        	
+	        .click(e=>{
+	        	e.preventDefault()
+	        	alert('다음 블럭으로 이동'+d.pxy.nextPage)
+        		recent_update({page : d.pxy.nextPage, size : d.pxy.pageSize})	        	
 	        })
 	        }
 	        
